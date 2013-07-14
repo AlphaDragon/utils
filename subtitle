@@ -1,0 +1,33 @@
+#!/bin/bash
+
+quitar_comentarios(){
+	echo "File: $1"
+	COMENTARIOS_NEFASTOS=`egrep -i -c "sync|n17t01|addic7ed|www|_" "$1"`	
+	echo "Número de comentarios nefastos = $COMENTARIOS_NEFASTOS"
+	egrep -i "sync|n17t01|addic7ed|www|_" "$1"
+	if [ $COMENTARIOS_NEFASTOS -ne 0 ]; then
+		for i in `seq 1 $COMENTARIOS_NEFASTOS`
+			do	
+				LINE=`egrep -i -n -m1 "sync|n17t01|addic7ed|www|_" "$1" | cut -f1 -d':'`		
+				sed -i $LINE'd' $1										
+			done
+		echo "Comentario(s) removido(s)"
+		echo "Fin"
+		echo
+	else
+		echo "No es necesario modificar el archivo de subtítulos."
+		echo
+	fi
+}
+
+ls | grep ".srt" | while read -r FILE
+do
+   	mv -v "$FILE" `echo $FILE | tr ' ' '.' `
+done
+LIST=`ls | grep ".srt"`
+for i in $LIST
+do	
+	quitar_comentarios $i
+done
+	
+
